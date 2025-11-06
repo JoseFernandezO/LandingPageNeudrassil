@@ -1,0 +1,27 @@
+<div class="content-section" [class]="'align-' + alignment">
+  <div class="content-decoration">
+    <div class="decoration-circle"></div>
+    <div class="decoration-line"></div>
+  </div>
+
+  <div class="content-wrapper">
+    <div class="content-icon">{{ icon }}</div>
+    <h2 class="content-title">{{ title }}</h2>
+    <p class="content-text">{{ content }}</p>
+
+    <!-- Lista de características/pasos -->
+    <ul class="content-features" *ngIf="features.length > 0">
+      <li *ngFor="let feature of features" class="feature-item">
+        {{ feature }}
+      </li>
+    </ul>
+
+    <!-- Botones -->
+    <div class="content-buttons" *ngIf="showButton">
+      <button class="content-cta primary">{{ buttonText }}</button>
+      <button class="content-cta secondary" *ngIf="secondaryButtonText">
+        {{ secondaryButtonText }}
+      </button>
+    </div>
+  </div>
+</div>

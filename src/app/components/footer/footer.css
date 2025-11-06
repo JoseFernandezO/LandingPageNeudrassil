@@ -1,0 +1,32 @@
+.footer {
+  background: var(--text-dark);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-text {
+  margin-bottom: 1rem;
+  opacity: 0.8;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.social-link {
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+  display: inline-block;
+}
+
+.social-link:hover {
+  transform: translateY(-5px) scale(1.2);
+}
