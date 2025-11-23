@@ -1,27 +1,31 @@
+<!-- src/app/components/hero/hero.component.html -->
 <section class="hero">
   <div class="hero-content">
     <div class="hero-badge">🧠 Centro Especializado en Tarija</div>
-    <h1 class="hero-title">Centro Neudrassil</h1>
-    <p class="hero-subtitle">Terapias Neurales Especializadas</p>
+    <h1 class="hero-title">Neudrasil</h1>
+    <p class="hero-subtitle">Neurorehabilitación – Salud Mental – Biomedicina</p>
     <p class="hero-description">
-      Acompañamiento profesional para mejorar tu calidad de vida y la de tu familia
+      Neurociencia y tecnología para mejorar tu calidad de vida.
     </p>
+
     <div class="hero-ctas">
-      <button class="hero-cta primary">
+      <button class="hero-cta primary" (click)="onAppointmentClick()">
         <span class="cta-icon">📅</span>
         Agendar Consulta
       </button>
-      <button class="hero-cta secondary">
+      <button class="hero-cta secondary" (click)="onQuestionnaireClick()">
         <span class="cta-icon">💬</span>
-        WhatsApp
+        Realizar Diagnóstico
       </button>
     </div>
+
     <div class="hero-trust">
-      <span class="trust-item">✓ Profesionales Certificados</span>
-      <span class="trust-item">✓ Atención Personalizada</span>
-      <span class="trust-item">✓ Resultados Comprobados</span>
+      <span class="trust-item">✓ Profesionales Especializados</span>
+      <span class="trust-item">✓ Abordajes Individualizados</span>
+      <span class="trust-item">✓ Resultados funcionales</span>
     </div>
   </div>
+
   <div class="hero-decoration">
     <div class="circle circle-1"></div>
     <div class="circle circle-2"></div>

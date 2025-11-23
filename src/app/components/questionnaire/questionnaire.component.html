@@ -1,0 +1,63 @@
+<!-- src/app/components/questionnaire/questionnaire.component.html -->
+<div class="questionnaire-container">
+  <div class="questionnaire-card">
+    <!-- Header -->
+    <div class="questionnaire-header">
+      <h2>Cuestionario de Evaluación</h2>
+      <button class="close-btn" (click)="cancel()" title="Cancelar">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="progress"></div>
+      </div>
+      <p class="progress-text">Pregunta {{ currentQuestionIndex + 1 }} de {{ questions.length }}</p>
+    </div>
+
+    <!-- Question -->
+    <div class="question-container">
+      <h3 class="question-text">{{ currentQuestion.text }}</h3>
+
+      <div class="options-container">
+        <div
+          *ngFor="let option of currentQuestion.options"
+          class="option-card"
+          [class.selected]="selectedOption === option.value"
+          (click)="selectOption(option.value)">
+          <div class="option-radio">
+            <div class="radio-dot" *ngIf="selectedOption === option.value"></div>
+          </div>
+          <span class="option-label">{{ option.label }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="questionnaire-actions">
+      <button
+        class="btn btn-secondary"
+        (click)="previousQuestion()"
+        [disabled]="currentQuestionIndex === 0">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+        Anterior
+      </button>
+
+      <button
+        class="btn btn-primary"
+        (click)="nextQuestion()"
+        [disabled]="selectedOption === null">
+        {{ isLastQuestion ? 'Finalizar' : 'Siguiente' }}
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>

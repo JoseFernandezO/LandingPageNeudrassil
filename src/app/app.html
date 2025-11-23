@@ -1,68 +1,277 @@
-<app-header [sections]="sections"></app-header>
+<!-- src/app/app.html -->
 
-<main>
-  <app-hero id="inicio"></app-hero>
+<!-- ========== MODAL DE BIENVENIDA ========== -->
+<app-welcome-modal
+  *ngIf="currentState === 'welcome'"
+  (startQuestionnaire)="onStartQuestionnaire()"
+  (skipQuestionnaire)="onSkipQuestionnaire()">
+</app-welcome-modal>
 
-  <!-- Sección: ¿Por Qué Neudrassil? -->
-  <section id="por-que-nosotros" class="section section-gradient-1">
-    <app-info-card
-      [title]="'Tu Bienestar es Nuestra Prioridad'"
-      [icon]="'💙'"
-      [content]="porQueContent"
-      [features]="porQueFeatures"
-      [alignment]="'center'"
-      [showButton]="false">
-    </app-info-card>
-  </section>
+<!-- ========== CUESTIONARIO ========== -->
+<app-questionnaire
+  *ngIf="currentState === 'questionnaire'"
+  (completed)="onQuestionnaireCompleted()"
+  (cancelled)="onQuestionnaireCancelled()">
+</app-questionnaire>
 
-  <!-- Sección: Servicios -->
-  <section id="servicios" class="section section-white">
-    <app-info-card
-      [title]="'Nuestros Servicios Especializados'"
-      [icon]="'🧠'"
-      [content]="serviciosContent"
-      [features]="serviciosFeatures"
-      [alignment]="'center'"
-      [buttonText]="'Conocer Más'">
-    </app-info-card>
-  </section>
+<!-- ========== RESULTADO DEL CUESTIONARIO ========== -->
+<app-questionnaire-result
+  *ngIf="currentState === 'result'"
+  (scheduleAppointment)="onScheduleAppointment()"
+  (close)="onResultClose()">
+</app-questionnaire-result>
 
-  <!-- Sección: Proceso -->
-  <section id="proceso" class="section section-gradient-2">
-    <app-info-card
-      [title]="'¿Cómo Trabajamos Contigo?'"
-      [icon]="'📋'"
-      [content]="procesoContent"
-      [features]="procesoSteps"
-      [alignment]="'center'"
-      [buttonText]="'Comienza Tu Evaluación'">
-    </app-info-card>
-  </section>
+<!-- ========== FORMULARIO DE CITA ========== -->
+<app-appointment-form
+  *ngIf="currentState === 'appointment'"
+  (submitted)="onAppointmentSubmitted()"
+  (cancelled)="onAppointmentCancelled()">
+</app-appointment-form>
 
-  <!-- Sección: FAQ -->
-  <section id="faq" class="section section-white">
-    <app-info-card
-      [title]="'Preguntas Frecuentes'"
-      [icon]="'❓'"
-      [content]="faqContent"
-      [features]="faqList"
-      [alignment]="'left'"
-      [showButton]="false">
-    </app-info-card>
-  </section>
+<!-- ========== LANDING PAGE PRINCIPAL ========== -->
+<div class="landing-container" *ngIf="currentState === 'landing'">
 
-  <!-- Sección: Contacto -->
-  <section id="contacto" class="section section-gradient-1">
-    <app-info-card
-      [title]="'Agenda Tu Consulta Hoy'"
-      [icon]="'📞'"
-      [content]="contactoContent"
-      [features]="contactoInfo"
-      [alignment]="'center'"
-      [buttonText]="'WhatsApp'"
-      [secondaryButtonText]="'Llamar Ahora'">
-    </app-info-card>
-  </section>
-</main>
+  <!-- Header Sticky -->
+  <app-header
+    [sections]="sections"
+    (appointmentClick)="openAppointmentForm()">
+  </app-header>
 
-<app-footer></app-footer>
+  <!-- Contenido Principal -->
+  <main class="main-content">
+
+    <!-- Sección Hero -->
+    <section id="inicio">
+      <app-hero
+        (appointmentClick)="openAppointmentForm()"
+        (questionnaireClick)="onStartQuestionnaire()">
+      </app-hero>
+    </section>
+
+    <!-- ¿Por Qué Nosotros? -->
+    <section id="por-que-nosotros" class="section section-gradient-1">
+      <div class="container">
+        <h2 class="section-title">💙 Tu Bienestar : Nuestra Prioridad</h2>
+        <p class="section-description">
+          En Neudrasil, sabemos que cuando una persona sufre dificultades cognitivas, emocionales
+          o del desarrollo, todas las dimensiones de la vida se ven afectadas. La falta de un diagnóstico
+          preciso o tratamientos inadecuados prolonga el sufrimiento y limita las posibilidades de
+          recuperación.
+
+
+        </p>
+        <ul class="features-list">
+          <li class="feature-item">✓ Atención personalizada y confidencial</li>
+          <li class="feature-item">✓ Equipo multidisciplinario especializado</li>
+          <li class="feature-item">✓ Técnicas basadas en evidencia científica</li>
+          <li class="feature-item">✓ Ambiente cálido y profesional</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Servicios -->
+    <section id="servicios" class="section section-white">
+      <div class="container">
+        <h2 class="section-title">🧠 Nuestros Servicios Especializados</h2>
+        <p class="section-description">
+          En Neudrasil entendemos ese desafío, por eso ofrecemos:
+        </p>
+        <ul class="features-list">
+          <li class="feature-item">✓ Evaluación clínica avanzada y programas de rehabilitación personalizados,
+            basados en evidencia científica y centrados en la persona.</li>
+          <li class="feature-item">✓ Aplicación de pruebas estandarizadas y actualizadas.</li>
+          <li class="feature-item">✓ Uso de tecnología en neurorehabilitación: Inteligencia Artificial y prototipos
+            biomédicos.</li>
+          <li class="feature-item">✓ Profesionales especializados - Equipo multidisciplinar con amplia experiencia.</li>
+        </ul>
+
+        <div class="services-grid">
+          <div class="service-card">
+            <div class="service-icon">🧠</div>
+            <h3>TRASTORNOS DEL NEURODESARROLLO</h3>
+            <p>Diagnóstico y abordaje terapéutico (Autismo, TDAH)</p>
+          </div>
+
+          <div class="service-card">
+            <div class="service-icon">💭</div>
+            <h3>ENFERMEDADES NEURODEGENERATIVAS</h3>
+            <p>Evaluación y rehabilitación cognitiva del Alzheimer,
+              Parkinson, Demencias.
+            </p>
+          </div>
+
+          <div class="service-card">
+            <div class="service-icon">🎯</div>
+            <h3>DAÑO CEREBRAL ADQUIRIDO</h3>
+            <p>Evaluación y rehabilitación de las funciones cognitivas afectadas por
+              ICTUS, Traumatismos craneales, infecciones del sistema nervioso central, tumores, epilepsia.</p>
+          </div>
+
+          <div class="service-card">
+            <div class="service-icon">🔬</div>
+            <h3>Trastornos del Neurodesarrollo</h3>
+            <p>Intervención temprana y apoyo continuo</p>
+          </div>
+
+          <div class="service-card">
+            <div class="service-icon">🧩</div>
+            <h3>AUTISMO (TEA)</h3>
+            <p>Programas especializados para el espectro autista</p>
+          </div>
+
+          <div class="service-card">
+            <div class="service-icon">🌟</div>
+            <h3>PSICOTERAPIA BREVE</h3>
+            <p>Evaluación y abordaje de trastornos de salud mental y enfermedades de
+              origen psicomático.</p>
+          </div>
+        </div>
+
+        <div class="section-cta">
+          <button class="btn btn-primary" (click)="openAppointmentForm()">
+            📅 Agendar Cita Ahora
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Nuestro Enfoque -->
+    <section id="nuestro-enfoque" class="section section-gradient-2">
+      <div class="container">
+        <h2 class="section-title">📋 ¿Cómo Trabajamos Contigo?</h2>
+        <p class="section-description">
+          Nuestro proceso está diseñado para brindarte la mejor atención desde el primer contacto.
+        </p>
+
+        <div class="steps-container">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <h3>Evaluación Inicial</h3>
+            <p>Conocemos tu situación y necesidades específicas</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <h3>Diagnóstico Profesional</h3>
+            <p>Análisis detallado y preciso de tu caso</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <h3>Plan Personalizado</h3>
+            <p>Diseñamos un tratamiento a tu medida</p>
+          </div>
+
+          <div class="step-card">
+            <div class="step-number">4</div>
+            <h3>Seguimiento Continuo</h3>
+            <p>Te acompañamos en cada paso del proceso</p>
+          </div>
+        </div>
+
+        <div class="section-cta">
+          <button class="btn btn-primary" (click)="onStartQuestionnaire()">
+            💬 Comenzar Evaluación Gratuita
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="section section-white">
+      <div class="container">
+        <h2 class="section-title">❓ Preguntas Frecuentes</h2>
+
+        <div class="faq-container">
+          <div class="faq-item">
+            <h3>¿Cuánto dura una sesión?</h3>
+            <p>Las sesiones tienen una duración entre 45 y 60 minutos, dependiendo del tipo de terapia.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>¿Aceptan seguros médicos?</h3>
+            <p>Sí, trabajamos con varios seguros. Consulta con tu aseguradora para verificar cobertura.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>¿Es confidencial?</h3>
+            <p>Absolutamente. Toda la información compartida está protegida por secreto profesional.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>¿Atienden a niños?</h3>
+            <p>Sí, trabajamos con pacientes de todas las edades, desde niños hasta adultos mayores.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>¿Cuántas sesiones necesitaré?</h3>
+            <p>Depende de cada caso. Lo evaluamos en la primera consulta y diseñamos un plan personalizado.</p>
+          </div>
+
+          <div class="faq-item">
+            <h3>¿Realizan atención online?</h3>
+            <p>Sí, ofrecemos sesiones presenciales y virtuales según tus necesidades.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contacto -->
+    <section id="contacto" class="section section-gradient-1">
+      <div class="container">
+        <h2 class="section-title">📞 Agenda Tu Consulta Hoy</h2>
+        <p class="section-description">
+          Estamos aquí para ayudarte. Contáctanos y da el primer paso hacia tu bienestar.
+        </p>
+
+        <div class="contact-info">
+          <div class="contact-item">
+            <div class="contact-icon">📱</div>
+            <div class="contact-details">
+              <h3>WhatsApp</h3>
+              <a href="https://wa.me/51977173546" target="_blank">+51 977 173 546</a>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon">📞</div>
+            <div class="contact-details">
+              <h3>Teléfono</h3>
+              <a href="tel:+51012345678">+51 (01) 234-5678</a>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon">📧</div>
+            <div class="contact-details">
+              <h3>Email</h3>
+              <a href="mailto:contacto@neudrassil.com">contacto@neudrassil.com</a>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <div class="contact-details">
+              <h3>Ubicación</h3>
+              <p>Tarija, Bolivia</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-buttons">
+          <button class="btn btn-primary" (click)="openAppointmentForm()">
+            📅 Agendar Cita
+          </button>
+          <a href="https://wa.me/51977173546" target="_blank" class="btn btn-secondary">
+            💬 WhatsApp
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <app-footer></app-footer>
+
+</div>

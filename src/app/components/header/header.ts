@@ -1,10 +1,10 @@
-import { Component, Input } from '@angular/core';
+// src/app/components/header/header.component.ts
+import { Component, HostListener, Output, EventEmitter, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-interface Section {
+interface NavSection {
   id: string;
-  title: string;
-  icon: string;
+  label: string;
 }
 
 @Component({
@@ -12,17 +12,53 @@ interface Section {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './header.html',
-  styleUrl: './header.css'
+  styleUrls: ['./header.css']
 })
 export class Header {
-  @Input() sections: Section[] = [];
-  activeSection: string = '';
+  @Input() sections: NavSection[] = [];
+  @Output() appointmentClick = new EventEmitter<void>();
+
+  isScrolled = false;
+  activeSection = 'inicio';
+
+  @HostListener('window:scroll')
+  onWindowScroll() {
+    this.isScrolled = window.scrollY > 50;
+    this.updateActiveSection();
+  }
 
   scrollToSection(sectionId: string): void {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const headerOffset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+
       this.activeSection = sectionId;
     }
+  }
+
+  private updateActiveSection(): void {
+    const sections = this.sections.map(s => s.id);
+
+    for (const sectionId of sections) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        if (rect.top <= 100 && rect.bottom >= 100) {
+          this.activeSection = sectionId;
+          break;
+        }
+      }
+    }
+  }
+
+  onAppointmentClick(): void {
+    this.appointmentClick.emit();
   }
 }

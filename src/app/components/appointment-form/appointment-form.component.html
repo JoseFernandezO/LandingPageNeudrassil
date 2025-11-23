@@ -1,0 +1,151 @@
+<!-- src/app/components/appointment-form/appointment-form.component.html -->
+<div class="appointment-container">
+  <div class="appointment-card">
+    <!-- Header -->
+    <div class="appointment-header">
+      <h2>Agendar Cita</h2>
+      <button class="close-btn" (click)="onCancel()" title="Cerrar">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message" *ngIf="submitSuccess">
+      <div class="success-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h3>¡Solicitud Enviada!</h3>
+      <p>Nos pondremos en contacto con usted pronto para confirmar su cita.</p>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="appointmentForm" (ngSubmit)="onSubmit()" *ngIf="!submitSuccess">
+      <div class="form-content">
+        <p class="form-intro">
+          Complete el siguiente formulario y nos pondremos en contacto con usted para coordinar
+          la fecha y hora de su cita.
+        </p>
+
+        <!-- Nombre -->
+        <div class="form-group">
+          <label for="patientName">Nombre Completo *</label>
+          <input
+            type="text"
+            id="patientName"
+            formControlName="patientName"
+            [class.invalid]="isFieldInvalid('patientName')"
+            placeholder="Ej: Juan Pérez González">
+          <span class="error-message" *ngIf="hasError('patientName', 'required')">
+            El nombre es requerido
+          </span>
+          <span class="error-message" *ngIf="hasError('patientName', 'minlength')">
+            El nombre debe tener al menos 3 caracteres
+          </span>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="patientEmail">Correo Electrónico *</label>
+          <input
+            type="email"
+            id="patientEmail"
+            formControlName="patientEmail"
+            [class.invalid]="isFieldInvalid('patientEmail')"
+            placeholder="ejemplo@correo.com">
+          <span class="error-message" *ngIf="hasError('patientEmail', 'required')">
+            El correo es requerido
+          </span>
+          <span class="error-message" *ngIf="hasError('patientEmail', 'email')">
+            Ingrese un correo válido
+          </span>
+        </div>
+
+        <!-- Teléfono -->
+        <div class="form-group">
+          <label for="patientPhone">Teléfono *</label>
+          <input
+            type="tel"
+            id="patientPhone"
+            formControlName="patientPhone"
+            [class.invalid]="isFieldInvalid('patientPhone')"
+            placeholder="Ej: 987654321">
+          <span class="error-message" *ngIf="hasError('patientPhone', 'required')">
+            El teléfono es requerido
+          </span>
+          <span class="error-message" *ngIf="hasError('patientPhone', 'pattern')">
+            Ingrese un teléfono válido (8-15 dígitos)
+          </span>
+        </div>
+
+        <!-- Tipo de Terapia -->
+        <div class="form-group">
+          <label for="therapyType">Tipo de Consulta *</label>
+          <select
+            id="therapyType"
+            formControlName="therapyType"
+            [class.invalid]="isFieldInvalid('therapyType')">
+            <option *ngFor="let type of therapyTypes" [value]="type.value">
+              {{ type.label }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Descripción -->
+        <div class="form-group">
+          <label for="description">Descripción de su Situación *</label>
+          <textarea
+            id="description"
+            formControlName="description"
+            [class.invalid]="isFieldInvalid('description')"
+            rows="5"
+            placeholder="Cuéntenos brevemente qué le trae a consulta, síntomas que experimenta, o cualquier información relevante..."></textarea>
+          <span class="error-message" *ngIf="hasError('description', 'required')">
+            La descripción es requerida
+          </span>
+          <span class="error-message" *ngIf="hasError('description', 'minlength')">
+            La descripción debe tener al menos 20 caracteres
+          </span>
+        </div>
+
+        <!-- Error Message -->
+        <div class="alert alert-error" *ngIf="submitError">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>Hubo un error al enviar el formulario. Por favor, intente nuevamente.</span>
+        </div>
+
+        <!-- Info Box -->
+        <div class="info-box">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p>
+            Una vez recibida su solicitud, nos comunicaremos con usted en un plazo de 24-48 horas
+            para coordinar la fecha y hora de su cita.
+          </p>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="isSubmitting">
+          Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+          <span *ngIf="!isSubmitting">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Enviar Solicitud
+          </span>
+          <span *ngIf="isSubmitting" class="loading-spinner"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

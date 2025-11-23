@@ -1,9 +1,23 @@
+// src/app/app.ts
 import { Component } from '@angular/core';
-import { Header } from './components/header/header';
-import { Hero } from './components/hero/hero';
-import { InfoCard } from './components/info-card/info-card';
-import { Footer } from './components/footer/footer';
 import { CommonModule } from '@angular/common';
+
+// Componentes
+import { Header } from './components/header/header';
+import { Footer } from './components/footer/footer';
+import { Hero } from './components/hero/hero';
+import { WelcomeModalComponent } from './components/welcome-modal/welcome-modal.component';
+import { QuestionnaireComponent } from './components/questionnaire/questionnaire.component';
+import { QuestionnaireResultComponent } from './components/questionnaire-result/questionnaire-result.component';
+import { AppointmentFormComponent } from './components/appointment-form/appointment-form.component';
+
+// Estados de la aplicación
+type AppState =
+  | 'welcome'        // Modal inicial
+  | 'questionnaire'  // Cuestionario activo
+  | 'result'         // Resultado del cuestionario
+  | 'appointment'    // Formulario de cita
+  | 'landing';       // Página normal
 
 @Component({
   selector: 'app-root',
@@ -11,83 +25,72 @@ import { CommonModule } from '@angular/common';
   imports: [
     CommonModule,
     Header,
+    Footer,
     Hero,
-    InfoCard,
-    Footer
+    WelcomeModalComponent,
+    QuestionnaireComponent,
+    QuestionnaireResultComponent,
+    AppointmentFormComponent
   ],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css']
 })
 export class App {
+  currentState: AppState = 'welcome'; // Comienza con el modal
+
+  // Datos para las secciones de la landing
   sections = [
-    { id: 'inicio', title: 'Inicio', icon: '🏥' },
-    { id: 'por-que-nosotros', title: 'Nosotros', icon: '💙' },
-    { id: 'servicios', title: 'Servicios', icon: '🧠' },
-    { id: 'proceso', title: 'Proceso', icon: '📋' },
-    { id: 'faq', title: 'FAQ', icon: '❓' },
-    { id: 'contacto', title: 'Contacto', icon: '📞' }
+    { id: 'inicio', label: 'Inicio' },
+    { id: 'por-que-nosotros', label: '¿Por Qué Nosotros?' },
+    { id: 'servicios', label: 'Servicios' },
+    { id: 'nuestro-enfoque', label: 'Nuestro Enfoque' },
+    { id: 'faq', label: 'FAQ' },
+    { id: 'contacto', label: 'Contacto' }
   ];
 
-  // Sección: ¿Por Qué Neudrassil?
-  porQueContent = `En Centro Neudrassil entendemos que cada persona es única y merece
-    atención especializada. Nuestro equipo de profesionales trabaja con dedicación y empatía
-    para acompañarte en cada paso de tu proceso terapéutico, brindando soluciones personalizadas
-    que se adaptan a tus necesidades específicas.`;
+  // ========== HANDLERS DEL MODAL DE BIENVENIDA ==========
 
-  porQueFeatures = [
-    '✓ Atención Personalizada e Integral - Cada plan terapéutico se diseña específicamente para ti',
-    '✓ Profesionales Certificados - Equipo multidisciplinario con amplia experiencia',
-    '✓ Ambiente Cómodo y Seguro - Instalaciones diseñadas para tu comodidad y confianza',
-    '✓ Seguimiento Continuo - Monitoreamos tu progreso y ajustamos según tus avances'
-  ];
+  onStartQuestionnaire(): void {
+    this.currentState = 'questionnaire';
+  }
 
-  // Sección: Servicios
-  serviciosContent = `Ofrecemos terapias especializadas diseñadas para atender las necesidades
-    únicas de cada persona, desde niños hasta adultos. Utilizamos metodologías basadas en
-    evidencia científica y las mejores prácticas internacionales.`;
+  onSkipQuestionnaire(): void {
+    this.currentState = 'landing';
+  }
 
-  serviciosFeatures = [
-    '🗣️ Terapia de Lenguaje - Desarrollo y rehabilitación del habla y comunicación',
-    '🤲 Terapia Ocupacional - Mejora de habilidades para actividades diarias',
-    '🏃 Terapia Física - Rehabilitación y fortalecimiento físico',
-    '🧘 Psicología Clínica - Apoyo emocional y conductual',
-    '👶 Estimulación Temprana - Desarrollo integral en edades tempranas',
-    '🎯 Integración Sensorial - Procesamiento y respuesta a estímulos sensoriales'
-  ];
+  // ========== HANDLERS DEL CUESTIONARIO ==========
 
-  // Sección: Proceso
-  procesoContent = `Un proceso estructurado y personalizado que te acompaña desde la primera
-    consulta hasta alcanzar tus objetivos terapéuticos.`;
+  onQuestionnaireCompleted(): void {
+    this.currentState = 'result';
+  }
 
-  procesoSteps = [
-    '1️⃣ Evaluación Inicial - Analizamos tu situación y necesidades específicas en una sesión completa de 60-90 minutos',
-    '2️⃣ Plan Personalizado - Diseñamos una estrategia terapéutica adaptada a ti con objetivos claros y medibles',
-    '3️⃣ Sesiones Terapéuticas - Trabajamos juntos aplicando técnicas especializadas con seguimiento continuo',
-    '4️⃣ Evaluación y Ajustes - Medimos resultados periódicamente y optimizamos tu tratamiento según tu progreso'
-  ];
+  onQuestionnaireCancelled(): void {
+    this.currentState = 'landing';
+  }
 
-  // Sección: FAQ
-  faqContent = `Resolvemos tus dudas más comunes sobre nuestros servicios y proceso de atención.`;
+  // ========== HANDLERS DEL RESULTADO ==========
 
-  faqList = [
-    '❓ ¿Qué edades atienden? - Atendemos desde niños pequeños hasta adultos mayores, con servicios adaptados para todas las etapas de la vida',
-    '❓ ¿Necesito referencia médica? - No es estrictamente necesario, aunque es recomendable. Puedes agendar directamente con nosotros',
-    '❓ ¿Cuánto dura una sesión? - Las sesiones duran generalmente entre 45 y 60 minutos, dependiendo del tipo de terapia',
-    '❓ ¿Con qué frecuencia debo asistir? - Depende de tu plan personalizado, puede ser de 1 a 3 veces por semana',
-    '❓ ¿Aceptan seguros médicos? - Contáctanos para verificar si tu seguro está incluido o consultar nuestras opciones de pago',
-    '❓ ¿Cómo agendo mi primera cita? - Puedes agendar por WhatsApp, llamada o formulario web. Te responderemos a la brevedad'
-  ];
+  onScheduleAppointment(): void {
+    this.currentState = 'appointment';
+  }
 
-  // Sección: Contacto
-  contactoContent = `Estamos listos para atenderte en Tarija. Comunícate con nosotros y agenda
-    tu evaluación inicial.`;
+  onResultClose(): void {
+    this.currentState = 'landing';
+  }
 
-  contactoInfo = [
-    '📍 Ubicación - [Calle y número], [Barrio], Tarija - Bolivia',
-    '📞 Teléfono - [Número de teléfono fijo]',
-    '💬 WhatsApp - [Número de WhatsApp]',
-    '✉️ Email - contacto@neudrassil.com',
-    '🕐 Horario - Lun-Vie: 8:00 AM - 6:00 PM | Sáb: 9:00 AM - 1:00 PM',
-    '🚗 Facilidades - Estacionamiento disponible y acceso para personas con movilidad reducida'
-  ];
+  // ========== HANDLERS DEL FORMULARIO DE CITA ==========
+
+  onAppointmentSubmitted(): void {
+    this.currentState = 'landing';
+  }
+
+  onAppointmentCancelled(): void {
+    this.currentState = 'landing';
+  }
+
+  // ========== MÉTODO PÚBLICO PARA ABRIR FORMULARIO ==========
+
+  openAppointmentForm(): void {
+    this.currentState = 'appointment';
+  }
 }
