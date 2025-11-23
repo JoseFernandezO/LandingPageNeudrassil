@@ -13,9 +13,8 @@ export class Footer {
   currentYear = new Date().getFullYear();
 
   socialLinks = [
-    { icon: '📘', name: 'Facebook', url: 'https://facebook.com/neudrassil' },
-    { icon: '📸', name: 'Instagram', url: 'https://instagram.com/neudrassil' },
-    { icon: '💼', name: 'LinkedIn', url: 'https://linkedin.com/company/neudrassil' },
-    { icon: '🐦', name: 'Twitter', url: 'https://twitter.com/neudrassil' }
+    { icon: '📘', name: 'Facebook', url: 'https://www.facebook.com/Neudrasil.Rehabilitacion/' },
+    { icon: '📸', name: 'Instagram', url: 'https://www.instagram.com/neudrasil.rehabilitacion/' },
+    { icon: '💼', name: 'LinkedIn', url: 'https://www.linkedin.com/company/neudrasil-rehabilitaci%C3%B3n-neurocognitiva-y-salud-mental/?originalSubdomain=bo' },
   ];
 }
